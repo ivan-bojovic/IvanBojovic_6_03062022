@@ -7,8 +7,11 @@ const mongoose = require('mongoose');
 // DOTENV pour gérer les variables d'environnements.
 require('dotenv').config();
 
+// Importation router sauce.
+const sauceRoutes = require('./routes/sauce');
 // Importation router user.
 const userRoutes = require('./routes/user')
+
 
 // Accès au chemin du système de fichier.
 const path = require('path');
@@ -34,6 +37,7 @@ app.use((req, res, next) => {
  //afichage des images
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
+app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
 
 // Exportation du fichier APP.JS.
