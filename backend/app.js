@@ -7,6 +7,9 @@ const mongoose = require('mongoose');
 // DOTENV pour gérer les variables d'environnements.
 require('dotenv').config();
 
+// Importation helmet
+const helmet = require("helmet"); //Sécurisation des en-tete
+
 // Importation router sauce.
 const sauceRoutes = require('./routes/sauce');
 // Importation router user.
@@ -16,6 +19,8 @@ const userRoutes = require('./routes/user')
 // Accès au chemin du système de fichier.
 const path = require('path');
 
+const app = express();
+
 // Connexion à la base de données
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.n8duq.mongodb.net/?retryWrites=true&w=majority`,
@@ -24,7 +29,10 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-const app = express();
+  //Securité OWASP
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy());
+app.disabled("x-powered-by");
 
 app.use (express.json());
 
