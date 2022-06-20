@@ -26,5 +26,4 @@ router.delete('/:id', auth, sauceCtrl.deleteSauce);
 router.post('/:id/like', auth, sauceCtrl.userLikeSauce);
 
 
-
 module.exports = router;
