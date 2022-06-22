@@ -7,6 +7,7 @@ module.exports = (req, res, next) => {
         const token = req.headers.authorization.split(' ')[1]
         const decodedToken = jwt.verify(token, process.env.JWTTOKEN)
         const userId = decodedToken.userId
+        req.userId = userId;
         if (req.body.userId && req.body.userId !== userId) {
             throw 'User ID Not Valid'
         } else {

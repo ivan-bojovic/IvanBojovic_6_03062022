@@ -1,9 +1,20 @@
 const Sauce = require('../models/Sauce');
 const fs = require('fs');
+const { log } = require('console');
 
 // Création des sauces.
 exports.createSauce = (req,res,next) => {
     const sauceObject = JSON.parse(req.body.sauce)
+    if (sauceObject.heat <0 && sauceObject.heat>10){
+        return res.status(400).json({
+            message: "le heat de sauce doit être entre 0 et 10"
+        })
+    }  
+    if (sauceObject.name === '' || sauceObject.manufacturer === '' || sauceObject.description === '' || sauceObject.mainPepper === '' || sauceObject.imageUrl === '' || sauceObject.heat === '' ){
+        return res.status(400).json({
+            message: "tous les champs doivent etre remplis"
+        })
+    }  
     const sauce = new Sauce({
         ...sauceObject,
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
@@ -18,9 +29,26 @@ exports.createSauce = (req,res,next) => {
 // Modifications des sauces.
 exports.modifySauce = (req,res,next) => {
     const sauceObject = req.file ? {...JSON.parse(req.body.sauce),imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}:{...req.body};
+    console.log('user', req.user, req.userId)
+    if (sauceObject.heat <0 && sauceObject.heat>10){
+        return res.status(400).json({
+            message: "le heat de sauce doit être entre 0 et 10"
+        })
+    }  
+    if (sauceObject.name === '' || sauceObject.manufacturer === '' || sauceObject.description === '' || sauceObject.mainPepper === '' || sauceObject.imageUrl === '' || sauceObject.heat === ''  ){
+        return res.status(400).json({
+            message: "tous le champs doivent etre remplis"
+        })
+    }  
+
     if(req.file){
         Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
+            if (sauce.userId !== req.userId) {
+                return res.status(400).json ({
+                    message: 'User ID Not Valid'
+                })
+            }
             const filename = sauce.imageUrl.split('/images/')[1];
             fs.unlink(`images/${filename}`, () => {
                 Sauce.updateOne({ _id: req.params.id }, {...sauceObject, _id:req.params.id})
@@ -40,6 +68,11 @@ exports.modifySauce = (req,res,next) => {
 exports.deleteSauce = (req,res,next) => {
     Sauce.findOne({ _id: req.params.id })
     .then(sauce => {
+        if (sauce.userId !== req.userId) {
+            return res.status(400).json ({
+                message: 'User ID Not Valid'
+            })
+        }
         const filename = sauce.imageUrl.split('/images/')[1];
         fs.unlink(`images/${filename}`, () => {
             Sauce.deleteOne({ _id: req.params.id })
