@@ -7,9 +7,9 @@ const mongoose = require('mongoose');
 // DOTENV pour gérer les variables d'environnements.
 require('dotenv').config();
 
-// Importation helmet
-const helmet = require('helmet'); //Sécurisation des en-tete
-//CORS
+// Importation helmet.
+const helmet = require('helmet'); // Sécurisation des en-tete.
+// CORS.
 const cors =require('cors');
 // Accès au chemin du système de fichier.
 const path = require('path');
@@ -22,7 +22,7 @@ const userRoutes = require('./routes/user')
 
 const app = express();
 
-// Connexion à la base de données
+// Connexion à la base de données.
 
 mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.n8duq.mongodb.net/?retryWrites=true&w=majority`,
   { useNewUrlParser: true,
@@ -30,7 +30,7 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 
-  //Securité OWASP
+  //Securité OWASP.
 app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }))
 
@@ -38,7 +38,7 @@ app.use (express.json());
 app.use(cors());
 
 
- //afichage des images
+ // Afichage des images.
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/sauces', sauceRoutes);

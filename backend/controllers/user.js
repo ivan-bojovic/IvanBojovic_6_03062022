@@ -3,10 +3,11 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 require('dotenv').config();
 const emailValidator= require('email-validator');
-//Création d'un mot de passe fort
+
+// Création d'un mot de passe fort.
 var passwordValidator = require('password-validator');
 
-// Create a schema
+// Create a schema.
 const passwordSchema = new passwordValidator();
 
 passwordSchema
@@ -18,7 +19,7 @@ passwordSchema
 .has().not().spaces()                          
 .is().not().oneOf(['Passw0rd', 'Password123']);
 
-//inscription de l'utilisateur et cryptage du password
+// Inscription de l'utilisateur et cryptage du password.
 exports.signup = (req,res,next) => {
     if(!emailValidator.validate(req.body.email) || !passwordSchema.validate(req.body.password)) {
         return res.status(400).json({message:'Verifiez le format de votre addresse e-mail ou votre mot de passe'});

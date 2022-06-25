@@ -29,7 +29,7 @@ exports.createSauce = (req,res,next) => {
 // Modifications des sauces.
 exports.modifySauce = (req,res,next) => {
     const sauceObject = req.file ? {...JSON.parse(req.body.sauce),imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`}:{...req.body};
-    console.log('user', req.user, req.userId)
+
     if (sauceObject.heat <0 && sauceObject.heat>10){
         return res.status(400).json({
             message: "le heat de sauce doit être entre 0 et 10"
@@ -97,7 +97,7 @@ exports.getAllSauce = (req,res,next) => {
         .catch(error => res.status(400).json({ error }));
 }
 
-//Gestion des likes
+// Gestion des likes.
 exports.userLikeSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then((sauce) => {
